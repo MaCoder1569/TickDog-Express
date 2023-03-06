@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const querystring = require("querystring");
-const neo4j = require("neo4j-driver");
 
 const app = express();
 const port = process.env.PORT;
@@ -11,10 +10,7 @@ const kakaoClientId = process.env.KAKAO_CLIENT_ID;
 const kakaoClientSecret = process.env.KAKAO_CLIENT_SECRET;
 const kakaoRedirectUri = process.env.KAKAO_REDIRECT_URI;
 
-const neo4jDriver = neo4j.driver(
-  process.env.NEO4J_URI,
-  neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
-);
+const neo4jDriver = require("./db");
 
 app.get("/", (req, res) => {
   res.send("Hello, world!");
