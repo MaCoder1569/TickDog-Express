@@ -17,7 +17,6 @@ router.get(
 router.get('/logout', async (req, res) => {
   try {
     const ACCESS_TOKEN = req.user.accessToken;
-    console.log('ACCESS_TOKEN: ', ACCESS_TOKEN);
     let logout = await axios({
       method: 'post',
       url: 'https://kapi.kakao.com/v1/user/logout',

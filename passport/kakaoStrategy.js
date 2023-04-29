@@ -1,5 +1,8 @@
 const passport = require('passport');
 const KakaoStrategy = require('passport-kakao').Strategy;
+const UserService = require('../services/userService');
+
+const userService = new UserService();
 
 module.exports = () => {
   passport.use(
@@ -11,13 +14,17 @@ module.exports = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          //TODO db등록 되있는지 확인
           if (profile) {
-            let user = { profile: profile, accessToken: accessToken };
-            done(null, user);
-          } else {
-            //TODO 없으면 db등록
-            // done(null, newUser); // 회원가입하고 로그인 인증 완료
+            console.log('kakaoStrategy!!!!!!!!!!!!!!!!!!');
+            const id = profile._json.kakao_account.email;
+            const user = await userService.get(id);
+            const recordLength = user.length;
+            console.log('recordLength: ', recordLength);
+            //사용자 등록 안되어있으면 등록
+            if (recordLength === 0) {
+              userService.register(id);
+            }
+            done(null, { id: id, accessToken: accessToken });
           }
         } catch (error) {
           console.error(error);
